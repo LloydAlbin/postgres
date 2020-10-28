@@ -2,11 +2,11 @@
 
 |License|Overall Build|
 |:---:|:---:|
-|![GitHub](https://img.shields.io/github/license/LloydAlbin/pg_monitor)|[![Build Status](https://www.travis-ci.org/LloydAlbin/pg_monitor.svg?branch=master)](https://www.travis-ci.org/LloydAlbin/pg_monitor/builds)|
+|![GitHub](https://img.shields.io/github/license/LloydAlbin/postgres-docker)|[![Build Status](https://www.travis-ci.org/LloydAlbin/postgres-docker.svg?branch=main)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 |**Postgresql**|**Build Status**|
-|10|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/master/1)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|11|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/master/2)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|12|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/master/3)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|10|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/1)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|11|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/2)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|12|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/3)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 
 This is a custom builder that is based off the Official PostgreSQL for Alpine Linux for use with TimescaleDB. The build script patches the official Dockerfile and then builds using the updated Dockerfile.
 
