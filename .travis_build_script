@@ -1,0 +1,75 @@
+language: bash
+services: docker
+sudo: required
+
+# blocklist
+#branches:
+#  except:
+#  - experimental
+
+# safelist
+#branches:
+#  only:
+#  - master
+
+#env:
+#- PGVERSION=pg11
+#- PGVERSION=pg12
+
+addons:
+  apt:
+    packages:
+      - perl
+      - python3
+      - python3-psycopg2
+      - python3-daemon
+#      - postgresql-client
+#      - libcurl4-openssl-dev
+#      - libelf-dev
+#      - libdw-dev
+#      - cmake
+
+#before_script: |
+#  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+#  tar xzf master.tar.gz &&
+#  cd kcov-master &&
+#  mkdir build &&
+#  cd build &&
+#  cmake .. &&
+#  make &&
+#  sudo make install &&
+#  cd ../.. &&
+#  rm -rf kcov-master &&
+#  mkdir -p coverage
+
+# https://blog.travis-ci.com/2017-10-26-running-kubernetes-on-travis-ci-with-minikube
+# https://github.com/LiliC/travis-minikube
+env:
+  global:
+    # This forces a specific TimescaleDB Version. This should normally be set to HEAD, 
+    # but if TimescaleDB breaks backwards compatibility, then this may need to be 
+    # set to a specific version until the code is updated.
+    #- TSVERSION=HEAD
+    # Tested and Passed
+    # 1.6.0
+    # 1.7.0 & 1.7.4 Stall after pg_prove 2nd script before running the 3rd script.
+    # Build and test currently supported versions of PostgreSQL
+    # - PGVERSION=pg11
+    # - PGVERSION=pg12
+
+before_script:
+  # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
+  - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+
+
+script:
+  # Using the default build paramaters for a fresh build
+  - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+
+  # Note: Last build test took 18+ mintues
+
+after_script:
+  - docker images
+  #- bash <(curl -s https://codecov.io/bash)>
+  
+# vim:set et ts=2 sw=2:
