@@ -108,14 +108,14 @@ git_push()
 		print_verbose 3 "Postgres Full Version Number: $PG_FULL_VERSION from $5/postgres/$6/alpine/Dockerfile"
 
 		print_verbose 2 "Pushing Docker Image: $3/$4:$6-alpine"
-		#docker push $3/$4:$6-alpine
+		docker push $3/$4:$6-alpine
 
 		print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
-		#docker push $3/$4:$PG_FULL_VERSION-alpine
+		docker push $3/$4:$PG_FULL_VERSION-alpine
 
-		if [ $4 -eq "13" ]; then
+		if [ $6 -eq "13" ]; then
 			print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
-			#docker push $3/$4:latest-alpine
+			docker push $3/$4:latest-alpine
 		fi
 	fi
 
