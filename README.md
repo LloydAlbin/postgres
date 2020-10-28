@@ -10,7 +10,7 @@
 
 Custom builder of the Official PostgreSQL for Alpine Linux for use with TimescaleDB
 
-The Official PostgreSQL Alpine version is creaded by default without LDAP support. We need the LDAP support, so this repository contains the code to build the PostgreSQL Alpine with LDAP support and a few additional extensions.
+The Official PostgreSQL Alpine version is created by default without LDAP support. We need the LDAP support at work, so this repository contains the code to build the PostgreSQL Alpine with LDAP support and a few additional extensions.
 
 ```bash
 cd ~
@@ -44,6 +44,7 @@ The build script will download the postgres and timescaledb-docker repositories.
 
 ```bash
 # For the first time
+~/postgres-docker/build_timescaledb.sh -v -v -v -V --add all --postgres -pgv pg11
 ~/postgres-docker/build_timescaledb.sh -v -v -v -V --add all --postgres -pgv pg12
 # Using the optional arguments
 ~/pg_monitor/timescaledb/custom/build_timescaledb.sh --org=lloydalbin ---pg_name=postgres
