@@ -17,6 +17,10 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - ls -l ~/
+        - ls -l ~/build/
+        - ls -l ~/build/LloydAlbin/
+        - ls -l ~/build/LloydAlbin/postgres-docker
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION
       after_script:
