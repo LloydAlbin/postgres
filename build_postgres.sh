@@ -20,6 +20,7 @@ git=0
 patch=0
 build=0
 push=0
+push_only=0
 clean=0
 clean_location=
 override_exit=0
@@ -115,7 +116,7 @@ git_push()
 		print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
 		#docker push $3/$4:$PG_FULL_VERSION-alpine
 
-		if [ $4 -eq "12" ]; then
+		if [ $4 -eq "13" ]; then
 			print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
 			#docker push $3/$4:latest-alpine
 		fi
@@ -518,6 +519,9 @@ while :; do
         --push)
 			push=1
         	;;
+        --push_only)
+			push_only=1
+        	;;
         --add)       # Takes an option argument; ensure it has been specified.
 			if [ "$2" ]; then
 				if [ $2 = "pgtap" ]; then
@@ -597,7 +601,8 @@ print_verbose 3 "Postgres Version Number: $PG_VER_NUMBER"
 print_verbose 3 "Clone/Pull Repositories: $git"
 print_verbose 3 "Patch Repositories: $patch"
 print_verbose 3 "Build Docker Images: $build"
-print_verbose 3 "Push Docker Images: $push"
+print_verbose 3 "Push Docker Images (With Build): $push"
+print_verbose 3 "Push Docker Images (No Build): $push_only"
 print_verbose 3 "Cleaning Level: $clean"
 print_verbose 3 "Cleaning Location: $clean_location"
 print_verbose 3 "Show Version Information: $version"
@@ -630,14 +635,18 @@ if [[ ! -z $clean_location ]]; then
 fi
 
 if [ $postgres -eq 1 ]; then
-	# Get/Update Repository
-	git_update $build_location/postgres https://github.com/docker-library/postgres.git ""
-	# Patch Makefile
-	postgres_patch $build_location $PG_VER_NUMBER
-	# Build Docker Image
-	postgres_build $build_location $ORG $PG_NAME $PG_VER_NUMBER
-	if [ $push -eq 1 ]; then
-		git_push $push 0 $ORG $PG_NAME $build_location $PG_VER_NUMBER
+	if [ $push_only -eq 1 ]; then
+		git_push $push_only 0 $ORG $PG_NAME $build_location $PG_VER_NUMBER
+	else
+		# Get/Update Repository
+		git_update $build_location/postgres https://github.com/docker-library/postgres.git ""
+		# Patch Makefile
+		postgres_patch $build_location $PG_VER_NUMBER
+		# Build Docker Image
+		postgres_build $build_location $ORG $PG_NAME $PG_VER_NUMBER
+		if [ $push -eq 1 ]; then
+			git_push $push 0 $ORG $PG_NAME $build_location $PG_VER_NUMBER
+		fi
 	fi
 fi
 
@@ -646,14 +655,18 @@ if [ $postgres -eq 1 -a $timescaledb -eq 1 ]; then
 fi
 
 if [ $timescaledb -eq 1 ]; then
-	# Get/Update Repository
-	git_update $build_location/timescaledb-docker https://github.com/timescale/timescaledb-docker.git $TS_VER
-	# Patch Makefile
-	timescaledb_patch $build_location $ORG $PG_NAME
-	# Build Docker Image
-	timescaledb_build $build_location $ORG $TS_NAME $PG_VER_NUMBER $PG_VER
-	if [ $push -eq 1 ]; then
-		git_push 0 $push $ORG $TS_NAME $build_location $PG_VER
+	if [ $push_only -eq 1 ]; then
+		git_push 0 $push_only $ORG $TS_NAME $build_location $PG_VER
+	else
+		# Get/Update Repository
+		git_update $build_location/timescaledb-docker https://github.com/timescale/timescaledb-docker.git $TS_VER
+		# Patch Makefile
+		timescaledb_patch $build_location $ORG $PG_NAME
+		# Build Docker Image
+		timescaledb_build $build_location $ORG $TS_NAME $PG_VER_NUMBER $PG_VER
+		if [ $push -eq 1 ]; then
+			git_push 0 $push $ORG $TS_NAME $build_location $PG_VER
+		fi
 	fi
 fi
 
