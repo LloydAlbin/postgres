@@ -53,11 +53,11 @@ The build script will download the postgres repository.
 ~/postgres-docker/build_postgres.sh --add all --org=lloydalbin ---pg_name=postgres
 
 # For the second time, otherwise the postgres Dockerfile will get double patched.
-~/postgres-docker/build_postgres.sh --clean postgres --override_exit
+~/postgres-docker/build_postgres.sh --clean postgres --override_exit --add all -pgv pg11 --org=lloydalbin --pg_name=postgres
 
 # For pushing the builds to the docker registry
 docker login -U lloydalbin -p my_password
-~/postgres-docker/build_postgres.sh --org=lloydalbin --pg_name=postgres --push_only
+~/postgres-docker/build_postgres.sh -pgv pg11 --org=lloydalbin --pg_name=postgres --push_only
 # You may also build and push at the same time.
 ~/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv pg11 --org=lloydalbin ---pg_name=postgres --push
 ```
