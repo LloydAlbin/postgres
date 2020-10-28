@@ -40,43 +40,30 @@ These options help define the docker image names in this format:
 
 If you have your own inhouse docker registery, then the ORG name should be the name of your inhouse docker registry.
 
-The build script will download the postgres and timescaledb-docker repositories.
+The build script will download the postgres repository.
 
 ```bash
 # For the first time
-~/postgres-docker/build_timescaledb.sh -v -v -v -V --add all --postgres -pgv pg11
-~/postgres-docker/build_timescaledb.sh -v -v -v -V --add all --postgres -pgv pg12
+~/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv pg11
+~/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv pg12
 # Using the optional arguments
-~/pg_monitor/timescaledb/custom/build_timescaledb.sh --org=lloydalbin ---pg_name=postgres
+~/postgres-docker/build_postgres.sh --add all --postgres --org=lloydalbin ---pg_name=postgres
 
 # For the second time, otherwise the postgres Dockerfile will get double patched.
-~/pg_monitor/timescaledb/custom/build_timescaledb.sh --clean postgres --override_exit
+~/postgres-docker/build_postgres.sh --clean postgres --override_exit
 ```
 
 ### PostgreSQL Versions
 
-The build_timescaledb.sh script has been updated to use PostgreSQL 12, but still works for PostgreSQL 11. To build PostgreSQL 11, just change the PG_VER variable to be pg11.
+The build_timescaledb.sh script has been updated to use PostgreSQL 12, but still works for PostgreSQL 11. The older versions can use PostgresSQl 10, just use the -pgv flag to be pg10.
 
 ## Clean / Delete Repositories
 
-If you wish to delete the repositories, you may do so manually or you can use the make command to clean up the postgres & timescaledb-docker repositories.
+If you wish to delete the repositories, you may do so manually or you can use the make command to clean up the postgres repository.
 
 ```bash
 # Delete repositories
-~/pg_monitor/timescaledb/custom/build_timescaledb.sh --clean
+~/pg_monitor/timescaledb/custom/build_postgres.sh --clean
 # Optional: Just Postgres
-~/pg_monitor/timescaledb/custom/build_timescaledb.sh --clean postgres
-# Optional: Just TimescaleDB
-~/pg_monitor/timescaledb/custom/build_timescaledb.sh --clean timescaledb
-```
-
-## Cron
-
-You can also have these auto-created via a cronjob on an hourly basis.
-
-```cron
-# With default arguments
-* 0 * * * $HOME/pg_monitor/timescaledb/custom/build_timescaledb.sh
-# With optional arguments
-* 0 * * * $HOME/pg_monitor/timescaledb/custom/build_timescaledb.sh --org=lloydalbin --ts_name=timescaledb --pg_name=postgres
+~/pg_monitor/timescaledb/custom/build_postgres.sh --clean postgres
 ```
