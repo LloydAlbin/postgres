@@ -18,7 +18,7 @@ jobs:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
       script: 
-        - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION
       after_script:
         - docker images
     - #stage: PostgreSQL 11
@@ -39,7 +39,7 @@ jobs:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
       script: 
-        - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION
       after_script:
         - docker images
     - # stage: PostgreSQl 12
@@ -60,6 +60,6 @@ jobs:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
       script: 
-        - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION
       after_script:
         - docker images
