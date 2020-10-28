@@ -2,16 +2,64 @@ jobs:
   include:
     - #stage: PostgreSQL 10
       name: "PostgreSQL 10"
+      language: bash
+      services: docker
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - perl
+            - python3
+            - python3-psycopg2
+            - python3-daemon
       env:
         - PGVERSION=pg10
-      script: ./.travis_build_script.yml
+      before_script:
+        # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+      script: 
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+        - docker images
     - #stage: PostgreSQL 11
       name: "PostgreSQL 11"
+      language: bash
+      services: docker
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - perl
+            - python3
+            - python3-psycopg2
+            - python3-daemon
       env:
         - PGVERSION=pg11
-      script: ./.travis_build_script.yml
+      before_script:
+        # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+      script: 
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+        - docker images
     - # stage: PostgreSQl 12
       name: "PostgreSQL 12"
+      language: bash
+      services: docker
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - perl
+            - python3
+            - python3-psycopg2
+            - python3-daemon
       env:
         - PGVERSION=pg12
-      script: ./.travis_build_script.yml
+      before_script:
+        # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+      script: 
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - ~/build/LloydAlbin/pg_monitor/timescaledb/custom/build_timescaledb.sh -v -v -v -V --add all -tsv $TSVERSION -pgv $PGVERSION
+        - docker images
