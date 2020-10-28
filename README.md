@@ -8,7 +8,7 @@
 |11|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/master/2)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 |12|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/master/3)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 
-Custom builder of the Official PostgreSQL for Alpine Linux for use with TimescaleDB
+This is a custom builder that is based off the Official PostgreSQL for Alpine Linux for use with TimescaleDB. The build script patches the official Dockerfile and then builds using the updated Dockerfile.
 
 The Official PostgreSQL Alpine version is created by default without LDAP support. We need the LDAP support at work, so this repository contains the code to build the PostgreSQL Alpine with LDAP support and a few additional extensions.
 
