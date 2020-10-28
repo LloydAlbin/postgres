@@ -2,6 +2,8 @@ jobs:
   include:
     - #stage: PostgreSQL 10
       name: "PostgreSQL 10"
+      env:
+        - PGVERSION=pg10
       language: bash
       services: docker
       sudo: required
@@ -12,8 +14,6 @@ jobs:
             - python3
             - python3-psycopg2
             - python3-daemon
-      env:
-        - PGVERSION=pg10
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
@@ -24,6 +24,8 @@ jobs:
         - docker images
     - #stage: PostgreSQL 11
       name: "PostgreSQL 11"
+      env:
+        - PGVERSION=pg11
       language: bash
       services: docker
       sudo: required
@@ -34,17 +36,18 @@ jobs:
             - python3
             - python3-psycopg2
             - python3-daemon
-      env:
-        - PGVERSION=pg11
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION
       after_script:
         - docker images
     - # stage: PostgreSQl 12
       name: "PostgreSQL 12"
+      env:
+        - PGVERSION=pg12
       language: bash
       services: docker
       sudo: required
@@ -55,11 +58,10 @@ jobs:
             - python3
             - python3-psycopg2
             - python3-daemon
-      env:
-        - PGVERSION=pg12
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION
       after_script:
