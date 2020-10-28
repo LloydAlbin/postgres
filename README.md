@@ -13,6 +13,8 @@ This is a custom builder that is based off the Official PostgreSQL for Alpine Li
 
 The Official PostgreSQL Alpine version is created by default without LDAP support. We need the LDAP support at work, so this repository contains the code to build the PostgreSQL Alpine with LDAP support and a few additional extensions.
 
+The built images may be found on [Docker Hub](https://hub.docker.com/repository/docker/lloydalbin/postgres).
+
 ```bash
 cd ~
 # Get the postgres-docker repository
@@ -45,13 +47,19 @@ The build script will download the postgres repository.
 
 ```bash
 # For the first time
-~/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv pg11
-~/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv pg12
+~/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv pg11 --org=lloydalbin ---pg_name=postgres
+~/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv pg12 --org=lloydalbin ---pg_name=postgres
 # Using the optional arguments
-~/postgres-docker/build_postgres.sh --add all --postgres --org=lloydalbin ---pg_name=postgres
+~/postgres-docker/build_postgres.sh --add all --org=lloydalbin ---pg_name=postgres
 
 # For the second time, otherwise the postgres Dockerfile will get double patched.
 ~/postgres-docker/build_postgres.sh --clean postgres --override_exit
+
+# For pushing the builds to the docker registry
+docker login -U lloydalbin -p my_password
+~/postgres-docker/build_postgres.sh --org=lloydalbin --pg_name=postgres --push_only
+# You may also build and push at the same time.
+~/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv pg11 --org=lloydalbin ---pg_name=postgres --push
 ```
 
 ### PostgreSQL Versions

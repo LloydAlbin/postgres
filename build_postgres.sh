@@ -5,15 +5,12 @@
 # This ensures we are not contaminated by variables from the environment.
 ORG="lloydalbin"
 PG_NAME="postgres"
-TS_NAME="timescaledb"
-TS_VER=
 PG_VER="pg12"
 PG_VER_NUMBER=$( echo $PG_VER | cut -c3-)
 PGTAP_VER="1.1.0"
 TDS_VER="2.0.2"
 verbose=0
 postgres=0
-timescaledb=0
 version=0
 build_location=~
 git=0
@@ -76,9 +73,9 @@ EOF
 version_info()
 {
 	cat << EOF
-build_timescaledb 0.01
-Copyright (C) 2019 Fred Hutchinson Cancer Research Center
-License Apache-2.0: Apache version 2 or later .
+build_postgres 0.01
+Copyright (C) 2019-2020 Fred Hutchinson Cancer Research Center
+License Apache-2.0: Apache version 2 or later.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
@@ -122,17 +119,6 @@ git_push()
 		fi
 	fi
 
-	# TimescaleDB
-	if [ $2 -eq 1 ]; then
-		VERSION=$( awk '/^ENV TIMESCALEDB_VERSION/ {print $3}' $5/timescaledb-docker/Dockerfile )
-		print_verbose 3 "Timescale Version: $VERSION from $5/timescaledb-docker/Dockerfile"
-
-		print_verbose 2 "Pushing Docker Image: $3/$4:$VERSION-$6"
-		#docker push $3/$4:$VERSION-$6
-
-		print_verbose 2 "Pushing Docker Image: $3/$4:latest-$6"
-		#docker push $3/$4:latest-$6
-	fi
 }
 
 git_update()
@@ -321,21 +307,6 @@ postgres_patch()
 	fi
 }
 
-timescaledb_patch()
-{
-	#print_verbose 1 "Checking out TimescaleDB version: $TS_VER"
-	#git checkout $TS_VER
-
-	# timescaledb_patch $build_location $ORG $PG_NAME
-	print_verbose 1 "Patching TimescaleDB Repository: $1/timescaledb-docker/Dockerfile"
-	sed -i "s#FROM postgres:#FROM $2/$3:#g" $1/timescaledb-docker/Dockerfile
-
-	# Use a specific version of timescaledb
-	if [ ! -z "$GIT_VER" ]; then
-		sed -i "s/ENV TIMESCALEDB_VERSION .*$/ENV TIMESCALEDB_VERSION ${GIT_VER}/g" $1/timescaledb-docker/Dockerfile
-	fi
-}
-
 postgres_build()
 {
 	if [[ -f $1/postgres/$4/alpine/.build_$PG_FULL_VERSION ]]; then
@@ -361,32 +332,6 @@ postgres_build()
 		fi
 
 		touch $1/postgres/$4/alpine/.build_$PG_FULL_VERSION
-	fi
-}
-
-timescaledb_build()
-{
-	if [[ -f $1/timescaledb-docker/.build_$VERSION_$5 ]]; then
-		print_verbose 1 "Skipping Building Postgres Docker Image: $1/postgres/$4/alpine"
-	else
-		# timescaledb_build $build_location $ORG $TS_NAME $PG_VER_NUMBER $PG_VER
-		print_verbose 1 "Building TimescaleDB Docker Image: $1/timescaledb-docker"
-		VERSION=$( awk '/^ENV TIMESCALEDB_VERSION/ {print $3}' $1/timescaledb-docker/Dockerfile )
-		print_verbose 3 "Timescale Version: $VERSION"
-		
-		# Build Latest TimescaleDB Version
-		print_verbose 2 "Building Docker Image: $2/$3:latest-$5 in $1/timescaledb-docker"
-		docker build --no-cache=true --build-arg PG_VERSION=$4 -t $2/$3:latest-$5 $1/timescaledb-docker
-
-		# Build Latest TimescaleDB Version for Specific Postgres Version
-		print_verbose 2 "Tagging Docker Image: $2/$3:latest from $2/$3:latest-$5"
-		docker tag $2/$3:latest-$5 $2/$3:latest
-
-		# Tag exact TimescaleDB Version
-		print_verbose 2 "Tagging Docker Image: $2/$3:$VERSION-$5 from $2/$3:latest-$5"
-		docker tag $2/$3:latest-$5 $2/$3:$VERSION-$5
-
-		touch $1/timescaledb-docker/.build_$VERSION_$5
 	fi
 }
 
@@ -425,20 +370,6 @@ while :; do
 		-pn=|--pg_name=)         # Handle the case of an empty --pg_name=
 			die 'ERROR: "-pn or --pg_name" requires a non-empty option argument.'
 			;;
-        -tn|--ts_name)       # Takes an option argument; ensure it has been specified.
-			if [ "$2" ]; then
-				TS_NAME=$2
-				shift
-			else
-				die 'ERROR: "-tn or --tg_name" requires a non-empty option argument.'
-			fi
-			;;
-		-tn=?*|--ts_name=?*)
-			TS_NAME=${1#*=} # Delete everything up to "=" and assign the remainder.
-			;;
-		-tn=|--ts_name=)         # Handle the case of an empty --ts_name=
-			die 'ERROR: "-tn or --tg_name" requires a non-empty option argument.'
-			;;
         -pgv|--pgversion)       # Takes an option argument; ensure it has been specified.
 			if [ "$2" ]; then
 				PG_VER=$2
@@ -454,20 +385,6 @@ while :; do
 			;;
 		-pgv=|--pgversion=)         # Handle the case of an empty --pgversion=
 			die 'ERROR: "-pgv or --pgversion" requires a non-empty option argument.'
-			;;
-        -tsv|--tsversion)       # Takes an option argument; ensure it has been specified.
-			if [ "$2" ]; then
-				TS_VER=$2
-				shift
-			else
-				die 'ERROR: "-tsv or --tsversion" requires a non-empty option argument.'
-			fi
-			;;
-		-tsv=?*|--tsversion=?*)
-			TS_VER=${1#*=} # Delete everything up to "=" and assign the remainder.
-			;;
-		-tsv=|--tsversion=)         # Handle the case of an empty --pgversion=
-			die 'ERROR: "-tsv or --tsversion" requires a non-empty option argument.'
 			;;
         --location)       # Takes an option argument; ensure it has been specified.
 			if [ "$2" ]; then
@@ -486,13 +403,13 @@ while :; do
         -c|--clean)       # Takes an option argument; ensure it has been specified.
 			if [ "$2" ]; then
 				if [[ "-${2:0:1}" == "--" ]]; then
-					clean=$((clean + 1))  # Each -v adds 1 to verbosity.
+					clean=$((clean + 1))  # Each -c adds 1 to clean.
 				else
 					clean_location=$2
 					shift
 				fi
 			else
-				clean=$((verbose + 1))  # Each -v adds 1 to verbosity.
+				clean=$((verbose + 1))  # Each -c adds 1 to clean.
 			fi
 			;;
 		-c=?*|--clean=?*)
@@ -512,9 +429,6 @@ while :; do
         	;;
         --postgres)
 			postgres=1
-        	;;
-        --timescaledb)
-			timescaledb=1
         	;;
         --push)
 			push=1
@@ -581,10 +495,9 @@ while :; do
     shift
 done
 
-if [ $timescaledb -eq "0" -a $postgres -eq "0" ]; then
+if [ $postgres -eq "0" ]; then
 	# If neither was set, then set them both
 	postgres=1
-	timescaledb=1
 fi
 
 if [ $version -eq "1" ]; then
@@ -594,8 +507,6 @@ fi
 print_verbose 3 "Verbose level: $verbose"
 print_verbose 3 "Organization Name: $ORG"
 print_verbose 3 "Postgres Name: $PG_NAME"
-print_verbose 3 "TimescaleDB Name: $TS_NAME"
-print_verbose 3 "TimescaleDB Version: $TS_VER"
 print_verbose 3 "Postgres Version: $PG_VER"
 print_verbose 3 "Postgres Version Number: $PG_VER_NUMBER"
 print_verbose 3 "Clone/Pull Repositories: $git"
@@ -613,12 +524,10 @@ print_verbose 3 "Add tds_fdw: $tds"
 print_verbose 3 "Add pgaudit: $pgaudit"
 print_verbose 3 "Add pgnodemx: $pgnodemx"
 print_verbose 3 "Process Postgres: $postgres"
-print_verbose 3 "Process TimescaleDB: $timescaledb"
 print_verbose 3 ""
 
 if [ $clean -ge 1 ]; then
 	clean_git ~/postgres
-	clean_git ~/timescaledb-docker
 	if [ $clean -ge 2 ]; then
 		clean_docker
 	fi
@@ -652,22 +561,6 @@ fi
 
 if [ $postgres -eq 1 -a $timescaledb -eq 1 ]; then
 	print_verbose 1 ""
-fi
-
-if [ $timescaledb -eq 1 ]; then
-	if [ $push_only -eq 1 ]; then
-		git_push 0 $push_only $ORG $TS_NAME $build_location $PG_VER
-	else
-		# Get/Update Repository
-		git_update $build_location/timescaledb-docker https://github.com/timescale/timescaledb-docker.git $TS_VER
-		# Patch Makefile
-		timescaledb_patch $build_location $ORG $PG_NAME
-		# Build Docker Image
-		timescaledb_build $build_location $ORG $TS_NAME $PG_VER_NUMBER $PG_VER
-		if [ $push -eq 1 ]; then
-			git_push 0 $push $ORG $TS_NAME $build_location $PG_VER
-		fi
-	fi
 fi
 
 if [ $clean -ge 2 ]; then
