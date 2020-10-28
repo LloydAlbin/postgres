@@ -34,14 +34,11 @@ Usage: ${0##*/} [-hv] [-o ORGANIZATION]
 	-h/--help					display this help and exit
 	-o/--org ORGANIZATION		insert the organization name into the docker name ORGANIZATION/NAME:VERSION - Default: lloydalbin
 	-pn/--pg_name NAME			insert the Poistgres name into the docker name ORGANIZATION/NAME:VERSION - Default: postgres
-	-tn/--ts_name NAME			insert the TimescaleDB name into the docker name ORGANIZATION/NAME:VERSION - Default: timescaledb
 	-v							verbose mode. Can be used multiple times for increased verbosity
 								MUST precede the -c command
 	-c/--clean					remove both repositories and exit
 	--override_exit				override exit after removing repository
 	-c/--clean REPOSITORY		remove specific repository and exit
-	--postgres					build postgres only - Default: --postgres --timescaledb
-	--timescaledb				build timescaledb only - Default: --postgres --timescaledb
 	--location					root repository location - Default: ~
 	-V/--version				show version information
 	--git						get from repository - Default: --git --patch --build
@@ -64,7 +61,6 @@ Usage: ${0##*/} [-hv] [-o ORGANIZATION]
 										financial, or ISO certification audits.
 									pgnodemx - SQL functions that allow capture of node OS metrics from PostgreSQL
 	-pgv/--pgversion VERSION	Overrides the default PostgreSQL version. - Default: $PG_VER
-	-tsv/--tsversion VERSION	Overrides the default TimescaleDB version. - Default: $TS_VER
 
 EOF
 }
@@ -426,9 +422,6 @@ while :; do
         	;;
         -V|--version)
 			version=1
-        	;;
-        --postgres)
-			postgres=1
         	;;
         --push)
 			push=1

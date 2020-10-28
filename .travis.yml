@@ -24,11 +24,11 @@ jobs:
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
         - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - #stage: PostgreSQL 11
       name: "PostgreSQL 11"
       env:
@@ -48,11 +48,11 @@ jobs:
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
         - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - # stage: PostgreSQl 12
       name: "PostgreSQL 12"
       env:
@@ -72,11 +72,11 @@ jobs:
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
         - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - # stage: PostgreSQl 13
       name: "PostgreSQL 13"
       env:
@@ -96,8 +96,8 @@ jobs:
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
         - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --postgres -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
