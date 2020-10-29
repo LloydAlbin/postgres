@@ -285,6 +285,11 @@ postgres_patch()
 			# Note these will be in reverse order after being inserted into the Dockerfile
 			# shared_preload_libraries = 'pgaudit,pg_stat_statements' #pgaudit <<<<<< NEED TO ADD
 			SPECIAL_VERSION=$( echo ${PG_VER_NUMBER} | tr '.' '_' )
+			if [[ ${PG_VER_NUMBER:0:2} == "9."]]; then
+				REL_VERSION="REL${SPECIAL_VERSION}_STABLE"
+			else
+				REL_VERSION="REL_${SPECIAL_VERSION}_STABLE"
+			fi
 			sed -i "/VOLUME/a 	&& rm -rf \/pgaudit " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a   && sed -i \"s/shared_preload_libraries = '/shared_preload_libraries = 'pgaudit,/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make install USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
