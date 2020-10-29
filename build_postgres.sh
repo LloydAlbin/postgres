@@ -18,6 +18,7 @@ patch=0
 build=0
 push=0
 push_only=0
+push_force=0
 clean=0
 clean_location=
 override_exit=0
@@ -45,6 +46,8 @@ Usage: ${0##*/} [-hv] [-o ORGANIZATION]
 	--patch						patch the repository - Default: --git --patch --build
 	--build						build the repository - Default: --git --patch --build
 	--push						push to repository
+	--push_only					push to repository and skip building (do not use with --push)
+	--push_force				push to repository even if the image already exists (also requires --push or --push_only)
 	--add (item)				add item to the Postgres docker image
 								Items:
 									all - Include all the items listed below
@@ -93,6 +96,11 @@ print_verbose()
 	fi
 }
 
+function docker_tag_exists() {
+	# https://stackoverflow.com/questions/30543409/how-to-check-if-a-docker-image-with-a-specific-tag-exist-locally
+    curl --silent -f -lSL https://index.docker.io/v1/repositories/$1/tags/$2 > /dev/null
+}
+
 git_push()
 {
 	# git_push postgres timescaledb ORG NAME $build_location PG_VER
@@ -100,18 +108,22 @@ git_push()
 
 	# Postgres
 	if [ $1 -eq 1 ]; then
-		PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $5/postgres/$6/alpine/Dockerfile )
-		print_verbose 3 "Postgres Full Version Number: $PG_FULL_VERSION from $5/postgres/$6/alpine/Dockerfile"
+		if [ docker_tag_exists $3/$4 $PG_FULL_VERSION-alpine ] && [ $push_force -eq 0 ]; then
+			print_verbose 2 "Skipping the Docker Push because the Docker Image already exists: $3/$4:$PG_FULL_VERSION-alpine"
+		else
+			PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $5/postgres/$6/alpine/Dockerfile )
+			print_verbose 3 "Postgres Full Version Number: $PG_FULL_VERSION from $5/postgres/$6/alpine/Dockerfile"
 
-		print_verbose 2 "Pushing Docker Image: $3/$4:$6-alpine"
-		docker push $3/$4:$6-alpine
+			print_verbose 2 "Pushing Docker Image: $3/$4:$6-alpine"
+			docker push $3/$4:$6-alpine
 
-		print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
-		docker push $3/$4:$PG_FULL_VERSION-alpine
+			print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
+			docker push $3/$4:$PG_FULL_VERSION-alpine
 
-		if [ $6 -eq "13" ]; then
-			print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
-			docker push $3/$4:latest-alpine
+			if [ $6 -eq "13" ]; then
+				print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
+				docker push $3/$4:latest-alpine
+			fi
 		fi
 	fi
 
@@ -429,6 +441,9 @@ while :; do
         --push_only)
 			push_only=1
         	;;
+        --push_force)
+			push_force=1
+        	;;
         --add)       # Takes an option argument; ensure it has been specified.
 			if [ "$2" ]; then
 				if [ $2 = "pgtap" ]; then
@@ -552,7 +567,7 @@ if [ $postgres -eq 1 ]; then
 	fi
 fi
 
-if [ $postgres -eq 1 -a $timescaledb -eq 1 ]; then
+if [ $postgres -eq 1 ]; then
 	print_verbose 1 ""
 fi
 
