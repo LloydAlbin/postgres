@@ -134,9 +134,13 @@ git_push()
 		print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
 		docker push $3/$4:$PG_FULL_VERSION-alpine
 
-		if [ $6 -eq "13" ]; then
-			print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
-			docker push $3/$4:latest-alpine
+		if [[ $6 == *.* ]]; then
+			# Skip when building versions such as 9.5 and 9.6 as they won't work for the integer matching of the next if.
+		else
+			if [ $6 -eq "13" ]; then
+				print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
+				docker push $3/$4:latest-alpine
+			fi
 		fi
 	fi
 
@@ -282,11 +286,12 @@ postgres_patch()
 		if (( $(echo "$PG_VER_NUMBER >= 9.5" |bc -l) )); then
 			# Note these will be in reverse order after being inserted into the Dockerfile
 			# shared_preload_libraries = 'pgaudit,pg_stat_statements' #pgaudit <<<<<< NEED TO ADD
+			SPECIAL_VERSION=$( echo ${PG_VER_NUMBER} | tr '.' '_' )
 			sed -i "/VOLUME/a 	&& rm -rf \/pgaudit " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a   && sed -i \"s/shared_preload_libraries = '/shared_preload_libraries = 'pgaudit,/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make install USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a 	&& git checkout REL_${PG_VER_NUMBER}_STABLE \\\\ " $1/postgres/$2/alpine/Dockerfile	
+			sed -i "/VOLUME/a 	&& git checkout REL_${SPECIAL_VERSION}_STABLE \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& cd \/pgaudit \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& git clone https://github.com/pgaudit/pgaudit.git \/pgaudit \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& apk add openssl \\\\ " $1/postgres/$2/alpine/Dockerfile	
