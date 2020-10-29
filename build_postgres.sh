@@ -354,10 +354,15 @@ postgres_build()
 		print_verbose 2 "Tagging Docker Image: $2/$3:$4-alpine from $2/$3:$PG_FULL_VERSION-alpine"
 		docker tag $2/$3:$PG_FULL_VERSION-alpine $2/$3:$4-alpine
 
-		if [ $4 -eq "12" ]; then
-			# Tag Latest Postgres Version
-			print_verbose 2 "Tagging Docker Image: $2/$3:latest-alpine from $2/$3:$PG_FULL_VERSION-alpine"
-			docker tag $2/$3:$PG_FULL_VERSION-alpine $2/$3:latest-alpine
+		if [[ $4 == *.* ]]; then
+			# Skip when building versions such as 9.5 and 9.6 as they won't work for the integer matching of the next if.
+			print_verbose 3 "Skip any Postgres versions below 9.6 for latest-alpine"
+		else
+			if [ $4 -eq "13" ]; then
+				# Tag Latest Postgres Version
+				print_verbose 2 "Tagging Docker Image: $2/$3:latest-alpine from $2/$3:$PG_FULL_VERSION-alpine"
+				docker tag $2/$3:$PG_FULL_VERSION-alpine $2/$3:latest-alpine
+			fi
 		fi
 
 		touch $1/postgres/$4/alpine/.build_$PG_FULL_VERSION
