@@ -136,6 +136,7 @@ git_push()
 
 		if [[ $6 == *.* ]]; then
 			# Skip when building versions such as 9.5 and 9.6 as they won't work for the integer matching of the next if.
+			print_verbose 3 "Skip any Postgres versions below 9.6 for latest-alpine"
 		else
 			if [ $6 -eq "13" ]; then
 				print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
