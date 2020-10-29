@@ -312,11 +312,11 @@ postgres_patch()
 
 		print_verbose 2 "Patching Postgres Repository: $1/postgres/$2/alpine/Dockerfile - Adding pgnodemx"
 		
-		if (( $(echo "$PG_VER_NUMBER == 9.5" |bc -l) )); then
+		#if (( $(echo "$PG_VER_NUMBER == 9.5" |bc -l) )); then
 			# Needs to create a role called pgmonitor
 			# Note these will be in reverse order after being inserted into the Dockerfile
-			sed -i "/VOLUME/a psql -h localhost -d postgres -c 'CREATE ROLE pgmonitor;'" $1/postgres/$2/alpine/Dockerfile	
-		fi			
+			#sed -i "/VOLUME/a RUN psql -h localhost -d postgres -c 'CREATE ROLE pgmonitor;'" $1/postgres/$2/alpine/Dockerfile	
+		#fi			
 
 		if (( $(echo "$PG_VER_NUMBER >= 9.5" |bc -l) )); then
 			# Note these will be in reverse order after being inserted into the Dockerfile
