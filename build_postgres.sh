@@ -294,7 +294,7 @@ postgres_patch()
 			sed -i "/VOLUME/a   && sed -i \"s/shared_preload_libraries = '/shared_preload_libraries = 'pgaudit,/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make install USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a 	&& git checkout REL_${SPECIAL_VERSION}_STABLE \\\\ " $1/postgres/$2/alpine/Dockerfile	
+			sed -i "/VOLUME/a 	&& git checkout ${REL_VERSION} \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& cd \/pgaudit \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& git clone https://github.com/pgaudit/pgaudit.git \/pgaudit \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& apk add openssl \\\\ " $1/postgres/$2/alpine/Dockerfile	
