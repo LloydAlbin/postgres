@@ -566,6 +566,7 @@ print_verbose 3 "Patch Repositories: $patch"
 print_verbose 3 "Build Docker Images: $build"
 print_verbose 3 "Push Docker Images (With Build): $push"
 print_verbose 3 "Push Docker Images (No Build): $push_only"
+print_verbose 3 "Push Docker Images (Even if same build already exists): $push_force"
 print_verbose 3 "Cleaning Level: $clean"
 print_verbose 3 "Cleaning Location: $clean_location"
 print_verbose 3 "Show Version Information: $version"
@@ -604,7 +605,15 @@ if [ $postgres -eq 1 ]; then
 		if check_git_to_docker -eq 1; then
 			# This if Check needs to be re-written. It works, but is coded badly.
 			print_verbose 3 "Test Failed???"
+			if [ $push_force -eq 1 ]; then
+				do_build=1
+			else
+				do_build=0
+			fi
 		else
+			do_build=1
+		fi
+		if [ $do_build -eq 1 ]; then
 			# Patch Makefile
 			postgres_patch $build_location $PG_VER_NUMBER
 			# Build Docker Image
