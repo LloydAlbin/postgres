@@ -195,6 +195,24 @@ clean_docker()
 	docker system prune -f
 }
 
+check_git_to_docker()
+{
+	print_verbose 3 "Starting Check"
+	#ENV PG_VERSION 9.5.23
+	PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $build_location/postgres/$PG_VER_NUMBER/alpine/Dockerfile )
+	print_verbose 3 "Found GIT Version: $PG_FULL_VERSION"
+
+	# Postgres
+	print_verbose 3 "Checking for Docker Version: $ORG/$PG_NAME:$PG_FULL_VERSION-alpine"
+	if docker_tag_exists $ORG/$PG_NAME $PG_FULL_VERSION-alpine; then
+		print_verbose 3 "Docker Matches GIT Version"
+		return 0
+	else
+		print_verbose 3 "Docker DOES NOT Match GIT Version"
+		return 1
+	fi
+}
+
 postgres_patch()
 {
 	# postgres_patch $build_location $PG_VER_NUMBER
@@ -583,10 +601,15 @@ if [ $postgres -eq 1 ]; then
 	else
 		# Get/Update Repository
 		git_update $build_location/postgres https://github.com/docker-library/postgres.git ""
-		# Patch Makefile
-		postgres_patch $build_location $PG_VER_NUMBER
-		# Build Docker Image
-		postgres_build $build_location $ORG $PG_NAME $PG_VER_NUMBER
+		if check_git_to_docker -eq 1; then
+			# This if Check needs to be re-written. It works, but is coded badly.
+			print_verbose 3 "Test Failed???"
+		else
+			# Patch Makefile
+			postgres_patch $build_location $PG_VER_NUMBER
+			# Build Docker Image
+			postgres_build $build_location $ORG $PG_NAME $PG_VER_NUMBER
+		fi
 		if [ $push -eq 1 ]; then
 			git_push $push 0 $ORG $PG_NAME $build_location $PG_VER_NUMBER
 		fi
