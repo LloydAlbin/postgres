@@ -2,12 +2,12 @@
 
 |Postgresql|Build Status|
 |:---:|:---:|
-|9.5|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/6)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|9.6|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/5)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|10|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/1)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|11|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/2)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|12|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/3)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
-|13|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/4)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|![9.5](https://img.shields.io/docker/v/lloydalbin/postgres/9.5-alpine)|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/6)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|![9.6](https://img.shields.io/docker/v/lloydalbin/postgres/9.6-alpine)|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/5)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|![10](https://img.shields.io/docker/v/lloydalbin/postgres/10-alpine)|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/1)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|![11](https://img.shields.io/docker/v/lloydalbin/postgres/11-alpine)|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/2)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|![12](https://img.shields.io/docker/v/lloydalbin/postgres/12-alpine)|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/3)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
+|![13](https://img.shields.io/docker/v/lloydalbin/postgres/13-alpine)|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/4)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 |**License**|![GitHub](https://img.shields.io/github/license/LloydAlbin/postgres-docker)|
 
 This is a custom builder that is based off the Official PostgreSQL for Alpine Linux for use with TimescaleDB. The build script patches the official Dockerfile and then builds using the updated Dockerfile.
