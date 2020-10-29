@@ -2,6 +2,7 @@
 
 |Postgresql|Build Status|
 |:---:|:---:|
+|9.5|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/6)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 |9.6|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/5)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 |10|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/1)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|
 |11|[![Build Status](https://travis-matrix-badges.herokuapp.com/repos/LloydAlbin/postgres-docker/branches/main/2)](https://www.travis-ci.org/LloydAlbin/postgres-docker/builds)|

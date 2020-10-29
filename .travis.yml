@@ -125,3 +125,27 @@ jobs:
         - docker images
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
+    - #stage: PostgreSQL 9.5
+      name: "PostgreSQL 9.5"
+      env:
+        - PGVERSION=pg9.5
+      language: bash
+      services: docker
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - perl
+            - python3
+            - python3-psycopg2
+            - python3-daemon
+      before_script:
+        # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
+        - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
+        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
+      script: 
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
+      after_script:
+        - docker images
+        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
