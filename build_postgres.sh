@@ -106,24 +106,34 @@ git_push()
 	# git_push postgres timescaledb ORG NAME $build_location PG_VER
 	print_verbose 1 "Push Postgres Docker Image"
 
+	do_push=0
+
 	# Postgres
 	if [ $1 -eq 1 ]; then
-		if [ docker_tag_exists $3/$4 $PG_FULL_VERSION-alpine ] && [ $push_force -eq 0 ]; then
-			print_verbose 2 "Skipping the Docker Push because the Docker Image already exists: $3/$4:$PG_FULL_VERSION-alpine"
+		if [ $push_force -eq "1" ]; then
+			do_push=1
 		else
-			PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $5/postgres/$6/alpine/Dockerfile )
-			print_verbose 3 "Postgres Full Version Number: $PG_FULL_VERSION from $5/postgres/$6/alpine/Dockerfile"
-
-			print_verbose 2 "Pushing Docker Image: $3/$4:$6-alpine"
-			docker push $3/$4:$6-alpine
-
-			print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
-			docker push $3/$4:$PG_FULL_VERSION-alpine
-
-			if [ $6 -eq "13" ]; then
-				print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
-				docker push $3/$4:latest-alpine
+			if docker_tag_exists $3/$4 $PG_FULL_VERSION-alpine; then
+				print_verbose 2 "Skipping the Docker Push because the Docker Image already exists: $3/$4:$PG_FULL_VERSION-alpine"
+			else
+				do_push=1
 			fi
+		fi
+	fi
+
+	if [ $do_push -eq "1" ]; then
+		PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $5/postgres/$6/alpine/Dockerfile )
+		print_verbose 3 "Postgres Full Version Number: $PG_FULL_VERSION from $5/postgres/$6/alpine/Dockerfile"
+
+		print_verbose 2 "Pushing Docker Image: $3/$4:$6-alpine"
+		docker push $3/$4:$6-alpine
+
+		print_verbose 2 "Pushing Docker Image: $3/$4:$PG_FULL_VERSION-alpine"
+		docker push $3/$4:$PG_FULL_VERSION-alpine
+
+		if [ $6 -eq "13" ]; then
+			print_verbose 2 "Pushing Docker Image: $3/$4:latest-alpine"
+			docker push $3/$4:latest-alpine
 		fi
 	fi
 
