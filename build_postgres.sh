@@ -195,7 +195,7 @@ clean_docker()
 	docker system prune -f
 }
 
-check_git_to_docker()
+function check_git_to_docker()
 {
 	print_verbose 3 "Starting Check"
 	#ENV PG_VERSION 9.5.23
@@ -602,16 +602,17 @@ if [ $postgres -eq 1 ]; then
 	else
 		# Get/Update Repository
 		git_update $build_location/postgres https://github.com/docker-library/postgres.git ""
-		if check_git_to_docker -eq 1; then
-			# This if Check needs to be re-written. It works, but is coded badly.
+		check_git_to_docker
+		check_val=$?
+		if [ $check_val -eq "1" ]; then
+			do_build=1
+		else
 			print_verbose 3 "Test Failed???"
 			if [ $push_force -eq 1 ]; then
 				do_build=1
 			else
 				do_build=0
 			fi
-		else
-			do_build=1
 		fi
 		if [ $do_build -eq 1 ]; then
 			# Patch Makefile
