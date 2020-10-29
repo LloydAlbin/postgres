@@ -27,7 +27,7 @@ jobs:
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - #stage: PostgreSQL 11
       name: "PostgreSQL 11"
@@ -51,7 +51,7 @@ jobs:
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - # stage: PostgreSQl 12
       name: "PostgreSQL 12"
@@ -75,7 +75,7 @@ jobs:
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - # stage: PostgreSQl 13
       name: "PostgreSQL 13"
@@ -99,7 +99,7 @@ jobs:
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - #stage: PostgreSQL 9.6
       name: "PostgreSQL 9.6"
@@ -123,7 +123,7 @@ jobs:
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
     - #stage: PostgreSQL 9.5
       name: "PostgreSQL 9.5"
@@ -147,5 +147,5 @@ jobs:
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
         - docker images
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME --push_only
