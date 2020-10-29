@@ -109,6 +109,7 @@ git_push()
 	print_verbose 1 "Push Postgres Docker Image"
 
 	do_push=0
+	PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $5/postgres/$6/alpine/Dockerfile )
 
 	# Postgres
 	if [ $1 -eq 1 ]; then
@@ -125,7 +126,6 @@ git_push()
 	fi
 
 	if [ $do_push -eq "1" ]; then
-		PG_FULL_VERSION=$( awk '/^ENV PG_VERSION/ {print $3}' $5/postgres/$6/alpine/Dockerfile )
 		print_verbose 3 "Postgres Full Version Number: $PG_FULL_VERSION from $5/postgres/$6/alpine/Dockerfile"
 
 		print_verbose 2 "Pushing Docker Image: $3/$4:$6-alpine"
