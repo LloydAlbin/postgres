@@ -97,8 +97,6 @@ print_verbose()
 }
 
 function docker_tag_exists() {
-	print_verbose 3 "Testing: docker_tag_exists $1:$2"
-	print_verbose 3 "Testing: https://index.docker.io/v1/repositories/$1/tags/$2"
 	# https://stackoverflow.com/questions/30543409/how-to-check-if-a-docker-image-with-a-specific-tag-exist-locally
     curl --silent -f -lSL https://index.docker.io/v1/repositories/$1/tags/$2 > /dev/null
 }
@@ -116,7 +114,6 @@ git_push()
 		if [ $push_force -eq "1" ]; then
 			do_push=1
 		else
-			print_verbose 3 "Testing: docker_tag_exists $3/$4 $PG_FULL_VERSION-alpine"
 			if docker_tag_exists $3/$4 $PG_FULL_VERSION-alpine; then
 				print_verbose 2 "Skipping the Docker Push because the Docker Image already exists: $3/$4:$PG_FULL_VERSION-alpine"
 			else
