@@ -22,7 +22,6 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
-        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
@@ -46,7 +45,6 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
-        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
@@ -70,7 +68,6 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
-        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
@@ -94,7 +91,6 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
-        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
@@ -118,7 +114,6 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
-        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
@@ -142,7 +137,6 @@ jobs:
       before_script:
         # Add https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP for pg_prove
         - cpanm --sudo TAP::Parser::SourceHandler::pgTAP
-        - chmod 755 ~/build/LloydAlbin/postgres-docker/build_postgres.sh
       script: 
         - ~/build/LloydAlbin/postgres-docker/build_postgres.sh -v -v -v -V --add all -pgv $PGVERSION --org $DOCKER_ORG --pg_name $DOCKER_IMAGE_NAME
       after_script:
