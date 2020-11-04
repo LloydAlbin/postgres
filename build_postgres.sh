@@ -221,6 +221,7 @@ postgres_patch()
 	sed -i 's/#\t\t--with-ldap/\t\t--with-ldap/g' $1/postgres/$2/alpine/Dockerfile
 	sed -i "/FROM alpine/a RUN echo 'nvm.overcommit_memory = 2' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
 	sed -i "/FROM alpine/a RUN echo 'vm.overcommit_ratio = 100' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
+	sed -i "/VOLUME/a RUN sed -r -i \"s/[#]*\\\\s*(shared_preload_libraries)\\\\s*=\\\\s*'(.*)'/\\\\1 = 'pg_stat_statements,\\\\2'/;s/,'/'/\" /usr/local/share/postgresql/postgresql.conf.sample" $1/postgres/$2/alpine/Dockerfile	
 
 	# This library contains a single PostgreSQL extension, a data type called "semver". 
 	# It's an implementation of the version number format specified by the Semantic Versioning 2.0.0 Specification.
@@ -309,9 +310,7 @@ postgres_patch()
 				REL_VERSION="REL_${SPECIAL_VERSION}_STABLE"
 			fi
 			sed -i "/VOLUME/a 	&& rm -rf \/pgaudit " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a   && sed -i \"s/,'/'/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a   && sed -i \"s/#shared_preload_libraries'/shared_preload_libraries/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a   && sed -i \"s/shared_preload_libraries = '/shared_preload_libraries = 'pgaudit,/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
+			sed -i "/VOLUME/a   && sed -r -i \"s/[#]*\\\\s*(shared_preload_libraries)\\\\s*=\\\\s*'(.*)'/\\\\1 = 'pgaudit,\\\\2'/;s/,'/'/\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make install USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& git checkout ${REL_VERSION} \\\\ " $1/postgres/$2/alpine/Dockerfile	
@@ -342,9 +341,7 @@ postgres_patch()
 			# Note these will be in reverse order after being inserted into the Dockerfile
 			# shared_preload_libraries = 'pgnodemx,pg_stat_statements' #pgnodemx <<<<<< NEED TO ADD
 			sed -i "/VOLUME/a 	&& rm -rf \/pgnodemx " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a   && sed -i \"s/,'/'/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a   && sed -i \"s/#shared_preload_libraries'/shared_preload_libraries/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a   && sed -i \"s/shared_preload_libraries = '/shared_preload_libraries = 'pgnodemx,/g\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
+			sed -i "/VOLUME/a   && sed -r -i \"s/[#]*\\\\s*(shared_preload_libraries)\\\\s*=\\\\s*'(.*)'/\\\\1 = 'pgnodemx,\\\\2'/;s/,'/'/\" /usr/local/share/postgresql/postgresql.conf.sample \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make install USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& make USE_PGXS=1 \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& cd \/pgnodemx  \\\\ " $1/postgres/$2/alpine/Dockerfile	
