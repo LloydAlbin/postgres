@@ -26,6 +26,7 @@ pgtap=0
 tds=0
 pgaudit=0
 pgnodemx=0
+ldap_patch=0
 
 # Usage info
 show_help()
@@ -63,6 +64,7 @@ Usage: ${0##*/} [-hv] [-o ORGANIZATION]
 										tools needed to produce audit logs required to pass certain government, 
 										financial, or ISO certification audits.
 									pgnodemx - SQL functions that allow capture of node OS metrics from PostgreSQL
+									ldap_patch - Patch LDAP
 	-pgv/--pgversion VERSION	Overrides the default PostgreSQL version. - Default: $PG_VER
 
 EOF
@@ -220,7 +222,11 @@ postgres_patch()
 	sed -i 's/#\t\topenldap-dev/\t\topenldap-dev/g' $1/postgres/$2/alpine/Dockerfile
 	sed -i 's/#\t\t--with-ldap/\t\t--with-ldap/g' $1/postgres/$2/alpine/Dockerfile
 	sed -i "/FROM alpine/a RUN echo 'nvm.overcommit_memory = 2' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
-	sed -i "/FROM alpine/a RUN echo 'vm.overcommit_ratio = 100' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
+	sed -i "/FROM alpine/a RUN echo 'vm.overcommit_memory = 2' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
+	sed -i "/FROM alpine/a RUN echo 'vm.overcommit_ratio = 90' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
+	sed -i "/FROM alpine/a RUN echo 'vm.dirty_background_ratio = 3' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
+	sed -i "/FROM alpine/a RUN echo 'vm.dirty_ratio = 5' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
+	sed -i "/FROM alpine/a RUN echo 'vm.oom-kill = 0' >> \/etc\/sysctl.conf" $1/postgres/$2/alpine/Dockerfile
 	sed -i "/VOLUME/a RUN sed -r -i \"s/[#]*\\\\s*(shared_preload_libraries)\\\\s*=\\\\s*'(.*)'/\\\\1 = 'pg_stat_statements,\\\\2'/;s/,'/'/\" /usr/local/share/postgresql/postgresql.conf.sample" $1/postgres/$2/alpine/Dockerfile	
 
 	# This library contains a single PostgreSQL extension, a data type called "semver". 
@@ -348,7 +354,8 @@ postgres_patch()
 			sed -i "/VOLUME/a 	&& git clone https://github.com/crunchydata/pgnodemx \/pgnodemx \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			# sed -i "/VOLUME/a 	&& cd contrib \\\\ " $1/postgres/$2/alpine/Dockerfile	
 			sed -i "/VOLUME/a 	&& apk add libmagic \\\\ " $1/postgres/$2/alpine/Dockerfile	
-			sed -i "/VOLUME/a RUN apk add --virtual build-dependencies su-exec patch make git gcc libc-dev clang llvm10-dev file-dev linux-headers \\\\ " $1/postgres/$2/alpine/Dockerfile	
+			sed -i "/VOLUME/a 	&& apk add openssl \\\\ " $1/postgres/$2/alpine/Dockerfile	
+			sed -i "/VOLUME/a RUN apk add --virtual build-dependencies su-exec patch make git gcc libc-dev clang llvm10-dev file-dev linux-headers openssl-dev \\\\ " $1/postgres/$2/alpine/Dockerfile	
 		else
 			print_verbose 2 "Patching Postgres Repository: $1/postgres/$2/alpine/Dockerfile - Adding pgnodemx - Does not support this version of PostgreSQL"
 		fi
@@ -499,11 +506,14 @@ while :; do
 					pgaudit=1
 				elif [ $2 = "pgnodemx" ]; then
 					pgnodemx=1
+				elif [ $2 = "ldap_patch" ]; then
+					ldap_patch=1
 				elif [ $2 = "all" ]; then
 					pgtap=1
 					tds=1
 					pgaudit=1
 					pgnodemx=1
+					ldap_patch=1
 				else
 					die 'ERROR: "--add" unknown argument: $2.'
 				fi
@@ -522,11 +532,14 @@ while :; do
 				pgaudit=1
 			elif [ $add_variable = "pgnodemx" ]; then
 				pgnodemx=1
+			elif [ $add_variable = "ldap_patch" ]; then
+				ldap_patch=1
 			elif [ $add_variable = "all" ]; then
 				pgtap=1
 				tds=1
 				pgaudit=1
 				pgnodemx=1
+				ldap_patch=1
 			else
 				die 'ERROR: "--add" unknown argument: $2.'
 			fi
@@ -577,6 +590,7 @@ print_verbose 3 "Add pgtap: $pgtap"
 print_verbose 3 "Add tds_fdw: $tds"
 print_verbose 3 "Add pgaudit: $pgaudit"
 print_verbose 3 "Add pgnodemx: $pgnodemx"
+print_verbose 3 "Add LDAP Patch: $ldap_patch"
 print_verbose 3 "Process Postgres: $postgres"
 print_verbose 3 ""
 
